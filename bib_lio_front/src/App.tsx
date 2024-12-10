@@ -1,35 +1,42 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+// App.js
+
+import { useAuth } from "react-oidc-context";
+import { RouterProvider } from "react-router-dom";
+import router from "./router/routes";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const auth = useAuth();
+
+  // const signOutRedirect = () => {
+  //   const clientId = "6gklp93qca7spv8gaamh4v3ml0";
+  //   const logoutUri = "<logout uri>";
+  //   const cognitoDomain = "https://<user pool domain>";
+  //   window.location.href = `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(logoutUri)}`;
+  // };
+  if (auth.isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (auth.error) {
+    return <div>Encountering error... {auth.error.message}</div>;
+  }
+
+  // if (auth.isAuthenticated) {
+  //   return auth.user
+  // }
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    // <div>
+    //   <button onClick={() => auth.signinRedirect()}>Sign in</button>
+    //   <button onClick={() => signOutRedirect()}>Sign out</button>
+    // </div>
 
-export default App
+    // auth.signinRedirect()
+
+    <>
+    <RouterProvider router={router} />
+    </>
+  );
+}
+  
+export default App;
