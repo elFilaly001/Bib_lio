@@ -5,7 +5,7 @@ import { UpdateBorrowDto } from './dto/update-borrow.dto';
 
 @Controller('borrow')
 export class BorrowController {
-  constructor(private readonly borrowService: BorrowService) {}
+  constructor(private readonly borrowService: BorrowService ) {}
 
   @Post()
   create(@Body() createBorrowDto: CreateBorrowDto) {

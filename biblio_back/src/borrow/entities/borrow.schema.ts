@@ -1,15 +1,17 @@
-import { Prop, Schema } from "@nestjs/mongoose";
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { IsDate, IsMongoId , IsString } from "class-validator";
+import { HydratedDocument } from "mongoose";
 
+export type BorrowDocument = HydratedDocument<Borrow>;
 @Schema()
-export class borrowSchema {
+export class Borrow {
     @Prop({required: true})
     @IsMongoId()
-    bookId:string;
+    BookIsbn:string;
 
     @Prop({required: true})
     @IsMongoId()
-    userId: string;
+    user: string;
 
     @Prop({required: true , default: Date.now()})
     @IsDate()
@@ -19,3 +21,5 @@ export class borrowSchema {
     @IsDate()
     returnDate: Date;
 }
+
+export const BorrowSchema = SchemaFactory.createForClass(Borrow);

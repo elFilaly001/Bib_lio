@@ -6,17 +6,14 @@ import { Input } from "./ui/input";
 import {
     NavigationMenu,
     NavigationMenuContent,
-    NavigationMenuIndicator,
     NavigationMenuItem,
     NavigationMenuLink,
     NavigationMenuList,
     NavigationMenuTrigger,
-    NavigationMenuViewport,
-} from "./ui/navigation-menu"
+} from "./ui/navigation-menu";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-
-
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { group } from "console";
 
 export default function NavBar() {
     const auth = useAuth();
@@ -25,46 +22,38 @@ export default function NavBar() {
 
         const signOutRedirect = () => {
             auth.removeUser();
-            const clientId = "7455imgksuvh1ruunk5ctts1ur";
+            const clientId = "5ccjs58hh11ntv0sue6b7qeb0a";
             const logoutUri = "http://localhost:5173/home";
-            const cognitoDomain = "https://eu-central-1kjl9ikbmr.auth.eu-central-1.amazoncognito.com";
+            const cognitoDomain = "https://eu-central-1rofxhnupw.auth.eu-central-1.amazoncognito.com";
             window.location.href = `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(logoutUri)}`;
           };
 
-        // if (auth.isLoading) {
-        //     return <div>Loading user info...</div>;
-        // }
-
-        // if (auth.error) {
-        //     return <div>Error loading user info: {auth.error.message}</div>;
-        // }
 
         if (!auth.isAuthenticated) {
             return (
                 <>
-                    {/* <div>User is not authenticated.</div> */}
                     <Button type="button" onClick={() => auth.signinRedirect()}>Sign in</Button>
                 </>
             );
         }
 
-        const userProfile = auth.user?.profile; // Extract `profile` for user details
 
-        console.log(auth);
-        // console.log(data.clientId);
+        console.log(auth.user?.profile);
+        
         return (
             <div>
-                <NavigationMenu>
+                <NavigationMenu className="w-full">
                     <NavigationMenuList>
                         <NavigationMenuItem>
-                            <NavigationMenuTrigger className="bg-slate-100"><Avatar>
-                                <AvatarImage src="https://github.com/shadcn.png" />
-                                <AvatarFallback>CN</AvatarFallback>
-                            </Avatar>
+                            <NavigationMenuTrigger className="bg-slate-100">
+                                <Avatar>
+                                    {/* <AvatarImage src="https://github.com/shadcn.png" /> */}
+                                    <AvatarFallback>{auth.user?.profile?.["cognito:username"][0].toUpperCase()}</AvatarFallback>
+                                </Avatar>
                             </NavigationMenuTrigger>
-                            <NavigationMenuContent >
-                                <NavigationMenuLink className="py-3">
-                                    <Button type="button" className="w-full" onClick={signOutRedirect}>Sign out</Button>
+                            <NavigationMenuContent>
+                                <NavigationMenuLink className="py-3 xs:w-5">
+                                    <Button type="button" className="w-full " onClick={signOutRedirect}>Sign out</Button>
                                 </NavigationMenuLink>
                             </NavigationMenuContent>
                         </NavigationMenuItem>
@@ -76,15 +65,17 @@ export default function NavBar() {
 
     return (
         <>
-            <div className="flex justify-around mt-3">
-                
-                <div className="w-1/2 flex">
-                    <Input placeholder="Search..." className="rounded-r-none" />
-                    <Button className="rounded-l-none h-full">
+            <div className="flex xs:flex-col md:flex-row justify-around mt-4">
+                <div className="flex w-11/12 xs:mx-auto md:w-1/2 mr-4">
+                    <Input placeholder="Isbn ..." className="rounded-r-none" />
+                    <Input placeholder="Title ..." className="rounded-r-none rounded-l-none" />
+                    <Button className="rounded-l-none xs:h-10">
                         <i className="fa-solid fa-magnifying-glass"></i>
                     </Button>
                 </div>
-                <UserInfo />
+                <div className="flex xs:mx-auto md:ml-4 md:mt-0 xs:mt-3 md:justify-end">
+                    <UserInfo />
+                </div>
             </div>
         </>
     );

@@ -14,13 +14,13 @@ export class BookController {
 
   @Get("")
   findAll() {
-    console.log('findAll');
+    // console.log('findAll');
     return this.bookService.findAll();
   }
 
   @Get('find')
-  findOne(@Query('isbn') isbn: string, @Query('title') title: string) {
-    return this.bookService.findBytitleOrIsbn(isbn, title);
+  findOne(@Query('isbn') isbn: string, @Query('title') title: string , @Query('author') author: string) {
+    return this.bookService.findBytitleOrIsbn(isbn, title , author);
   }
 
   @Patch(':isbn')

@@ -30,10 +30,10 @@ export class BookService {
     }
   }
 
-  async findBytitleOrIsbn(isbn: string, title: string) {
+  async findBytitleOrIsbn(isbn: string, title: string , author: string ) {
     try {
 
-      const book = await this.bookModel.find({$or: [{ title: title }, { isbn: isbn }]});
+      const book = await this.bookModel.find({$or: [{ title: title }, { isbn: isbn } , { author : author}]});
 
       if (book.length === 0 || !book) {
         throw new NotFoundException('Book not found');
@@ -68,10 +68,17 @@ export class BookService {
       Exist(this.bookModel,{isbn: isbn}, true);
 
       const deletedBook = await this.bookModel.deleteOne({ isbn: isbn });
+
+      if (!deletedBook) {
+        throw new BadRequestException("please check your data");
+      }
+  
       return "deleted successfully"
 
     } catch (error) {
+
       throw error
+      
     }
   }
 }
