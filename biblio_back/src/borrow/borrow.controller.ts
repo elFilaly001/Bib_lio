@@ -5,30 +5,20 @@ import { UpdateBorrowDto } from './dto/update-borrow.dto';
 
 @Controller('borrow')
 export class BorrowController {
-  constructor(private readonly borrowService: BorrowService) {}
+  constructor(private readonly borrowService: BorrowService ) {}
 
   @Post()
   create(@Body() createBorrowDto: CreateBorrowDto) {
-    return this.borrowService.create(createBorrowDto);
+    return this.borrowService.borrowBook(createBorrowDto);
   }
 
-  @Get()
-  findAll() {
-    return this.borrowService.findAll();
+  @Post('/return')
+  returnBook(@Body() data: UpdateBorrowDto) {
+    // console.log();
+    
+    return this.borrowService.returnBook(data);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.borrowService.findOne(+id);
-  }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateBorrowDto: UpdateBorrowDto) {
-    return this.borrowService.update(+id, updateBorrowDto);
-  }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.borrowService.remove(+id);
-  }
 }

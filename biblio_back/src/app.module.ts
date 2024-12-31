@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { ConfigService } from '@nestjs/config';
 import { BookModule } from './book/book.module';
 import { BorrowModule } from './borrow/borrow.module';
+// import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
