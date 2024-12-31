@@ -1,6 +1,6 @@
 import { BadRequestException } from '@nestjs/common';
 
-async function Exist(Model: any, fields: Object, shouldExist: boolean): Promise<Boolean> {
+async function Exist(Model: any, fields: object, shouldExist: boolean): Promise<any> {
     try {
 
         const DataExist = await Model.findOne(fields);
@@ -11,14 +11,17 @@ async function Exist(Model: any, fields: Object, shouldExist: boolean): Promise<
         if (!shouldExist) {
             if (DataExist) {
                 throw new BadRequestException(`already exists: ${fieldEntries}`);
+            }else {
+                return DataExist
             }
         } else {
             if (!DataExist) {
                 throw new BadRequestException(`Expectes ${fieldEntries}`);
+            }else{
+                return DataExist
             }
         }
 
-        return true;
     } catch (error) {
         throw error;
     }

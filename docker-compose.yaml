@@ -1,0 +1,12 @@
+version: '3'
+services:
+  biblio_back:
+    build: .
+    image: biblio_back
+    container_name: "biblio_back"
+    ports:  
+      - "3000:3000"
+    environment:
+      - "MONGO_URI": "mongodb+srv://elfilalyabdeljalil:jGq8BeJbQEB3g6rL@cluster0.yn0nm.mongodb.net/Biblio?retryWrites=true&w=majority&appName=Cluster0"
+
+

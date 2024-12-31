@@ -9,26 +9,11 @@ export class BorrowController {
 
   @Post()
   create(@Body() createBorrowDto: CreateBorrowDto) {
-    return this.borrowService.create(createBorrowDto);
+    return this.borrowService.borrowBook(createBorrowDto);
   }
 
-  @Get()
-  findAll() {
-    return this.borrowService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.borrowService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateBorrowDto: UpdateBorrowDto) {
-    return this.borrowService.update(+id, updateBorrowDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.borrowService.remove(+id);
+  @Post('/return')
+  returnBook(@Body() data: UpdateBorrowDto) {
+    return this.borrowService.returnBook(data);
   }
 }

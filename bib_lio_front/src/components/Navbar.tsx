@@ -38,7 +38,7 @@ export default function NavBar() {
         }
 
 
-        console.log(auth.user?.profile);
+        console.log(auth.user);
         
         return (
             <div>

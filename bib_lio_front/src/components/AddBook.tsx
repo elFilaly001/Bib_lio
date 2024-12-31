@@ -69,7 +69,7 @@ const AddBook = () => {
                         </div>
 
                         <div className="space-y-2">
-                            <Label htmlFor="authors">Authors</Label>
+                            <Label htmlFor="authors">Author</Label>
                             <Input
                                 id="authors"
                                 name="authors"

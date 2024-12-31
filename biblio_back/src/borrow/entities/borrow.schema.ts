@@ -7,11 +7,11 @@ export type BorrowDocument = HydratedDocument<Borrow>;
 export class Borrow {
     @Prop({required: true})
     @IsMongoId()
-    BookIsbn:string;
+    isbn:string;
 
     @Prop({required: true})
     @IsMongoId()
-    user: string;
+    userId: string;
 
     @Prop({required: true , default: Date.now()})
     @IsDate()
@@ -20,6 +20,9 @@ export class Borrow {
     @Prop({required: true })
     @IsDate()
     returnDate: Date;
+
+    @Prop({required: true , default: false})
+    returned: boolean;
 }
 
 export const BorrowSchema = SchemaFactory.createForClass(Borrow);

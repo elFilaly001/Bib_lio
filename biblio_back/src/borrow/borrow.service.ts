@@ -1,33 +1,69 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { CreateBorrowDto } from './dto/create-borrow.dto';
 import { UpdateBorrowDto } from './dto/update-borrow.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { BookAvailableDto } from 'src/book/dto/update-book.dto';
+import { Model } from 'mongoose';
 import { Exist } from 'src/Helpres/Existence';
+import { BorrowDocument } from './entities/borrow.schema';
+import { BookDocument } from '../book/entities/book.schema';
 
 @Injectable()
 export class BorrowService {
+  constructor(
+    @InjectModel('Borrow') private readonly borrowModel: Model<BorrowDocument>,
+    @InjectModel('Book') private readonly bookModel: Model<BookDocument>
+  ) {}
 
-  constructor(@InjectModel('Borrow') private readonly borrowModel, @InjectModel ('Book') private readonly bookModel) {}
-  async create(createBorrowDto: CreateBorrowDto) {
+  async borrowBook(borrowDto: CreateBorrowDto) {
+    try {
+      // Check if the book exists and is available
+      const book = await Exist(this.bookModel, { isbn: borrowDto.isbn  }, true);
 
-    Exist(this.borrowModel , {isbn: createBorrowDto.bookId , userId: createBorrowDto.userId} , false);
-    return 'This action adds a new borrow';
+      // console.log(book.available);
+      
+
+      if (!book.available) {
+        throw new BadRequestException('Book is not available for borrowing');
+      }
+
+      const borrowDate = new Date();
+      const returnDate = new Date();
+      returnDate.setDate(returnDate.getDate() + 15);
+
+      const newBorrow = new this.borrowModel({...borrowDto , borrowDate: borrowDate, returnDate: returnDate , returned: false});
+      await newBorrow.save();
+
+      await this.bookModel.updateOne({ isbn: borrowDto.isbn }, { available: false });
+
+      return 'Book borrowed successfully';
+
+    } catch (error) {
+      throw error;
+    }
   }
 
-  findAll() {
-    return `This action returns all borrow`;
-  }
+  async returnBook(data : UpdateBorrowDto ) {
+    try {
 
-  findOne(id: number) {
-    return `This action returns a #${id} borrow`;
-  }
+      
+      // console.log("test " , isbn);
+      // Check if the book exists and is borrowed
+      const borrowRecord = await Exist(this.borrowModel, { isbn: data.isbn , userId: data.userId }, true);
+      // console.log("test2" , borrowRecord);
 
-  update(id: number, updateBorrowDto: UpdateBorrowDto) {
-    return `This action updates a #${id} borrow`;
-  }
+      if (!borrowRecord) {
+        throw new BadRequestException('No active borrow record found for this book');
+      }
 
-  remove(id: number) {
-    return `This action removes a #${id} borrow`;
+      // // Update the borrow record to mark it as returned
+      await this.borrowModel.updateOne({ isbn: data.isbn , userId: data.userId, returned: false }, { returned: true });
+
+      // // Update the book's availability status
+      await this.bookModel.updateOne({ isbn: data.isbn }, { available: true });
+
+      return 'Book returned successfully';
+    } catch (error) {
+      throw error;
+    }
   }
 }
