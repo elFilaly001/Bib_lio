@@ -25,5 +25,11 @@ export class BorrowController {
   }
 
 
+  @Post('/user')
+  findBorrows(@Body() user : string) {
+    return this.borrowService.findBorrows(user);
+  }
+
+
 
 }

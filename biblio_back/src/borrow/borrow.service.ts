@@ -25,6 +25,17 @@ export class BorrowService {
       throw error;
     }
   }
+  async findBorrows(user : string) {
+    try {
+      const allBorrows = await this.borrowModel.find({userId : user});
+      if (allBorrows.length === 0) {
+        throw new NotFoundException('No borrows found');
+      }
+      return allBorrows;
+    } catch (error) {
+      throw error;
+    }
+  }
 
 
   async borrowBook(borrowDto: CreateBorrowDto) {
