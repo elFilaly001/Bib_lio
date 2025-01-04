@@ -19,6 +19,11 @@ export class BorrowController {
     return this.borrowService.returnBook(data);
   }
 
+  @Get()
+  findAll() {
+    return this.borrowService.findAllBorrows();
+  }
+
 
 
 }

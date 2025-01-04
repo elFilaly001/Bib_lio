@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { CreateBorrowDto } from './dto/create-borrow.dto';
 import { UpdateBorrowDto } from './dto/update-borrow.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -13,6 +13,19 @@ export class BorrowService {
     @InjectModel('Borrow') private readonly borrowModel: Model<BorrowDocument>,
     @InjectModel('Book') private readonly bookModel: Model<BookDocument>
   ) {}
+
+  async findAllBorrows() {
+    try {
+      const allBorrows = await this.borrowModel.find();
+      if (allBorrows.length === 0) {
+        throw new NotFoundException('No borrows found');
+      }
+      return allBorrows;
+    } catch (error) {
+      throw error;
+    }
+  }
+
 
   async borrowBook(borrowDto: CreateBorrowDto) {
     try {

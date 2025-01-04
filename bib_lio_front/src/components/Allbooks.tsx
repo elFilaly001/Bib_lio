@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import axiosInstance from "@/service/axiosInstence"
 import { useState, useEffect } from "react"
+import axios from "axios"
 
 export default function Allbooks() {
     const [data, setData] = useState([])
@@ -25,12 +26,19 @@ export default function Allbooks() {
     const [isModalOpen, setIsModalOpen] = useState(false)
 
     useEffect(() => {
+        console.log("Component mounted, attempting to fetch data");
         const fetchData = async () => {
-            const res = await axiosInstance.get('/book')
-            setData(res.data)
-            console.log("data retrieved successfully")
+            try {
+                console.log("Fetching data...");
+                const res = await axiosInstance.get('/books')
+                console.log("Response received:", res);
+                setData(res.data)
+                console.log("Data set successfully");
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
         }
-        fetchData()
+        fetchData();
     }, [])
 
     const handleEdit = (book) => {
@@ -67,7 +75,7 @@ export default function Allbooks() {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {data.map((book) => (
+                    {data.forEach((book) => (
                         <TableRow key={book.isbn}>
                             <TableCell className="font-medium">{book.isbn}</TableCell>
                             <TableCell>{book.title}</TableCell>
